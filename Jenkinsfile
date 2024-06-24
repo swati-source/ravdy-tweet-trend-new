@@ -6,7 +6,7 @@ pipeline {
         }
     }
     environment {
-        PATH = "/opt/apache-maven-3.9.2/bin:$PATH"
+        PATH = "/opt/apache-maven-3.9.8/bin:$PATH"
     }
     stages {
         stage("build") {
@@ -25,10 +25,10 @@ pipeline {
         }
         stage('SonarQube analysis') {
             environment {
-                scannerHome = tool 'valaxy-sonar-scanner'
+                scannerHome = tool 'swati-sonar-scanner'
             }
             steps {
-                withSonarQubeEnv('valaxy-sonarqube-server') {
+                withSonarQubeEnv('swati-sonarqube-server') {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
