@@ -1,4 +1,4 @@
-def registry = 'https://swatishivanand.jfrog.io/'
+def registry = 'https://swatishivanand.jfrog.io'
 pipeline {
     agent {
         node {
@@ -11,10 +11,18 @@ pipeline {
     stages {
         stage("build") {
             steps {
+                echo "----------- build started ----------"
                 sh 'mvn clean deploy'
+                echo "----------- build completed ----------"
             }
         }
-
+        stage("test") {
+            steps {
+                echo "----------- unit test started ----------"
+                sh 'mvn test'
+                echo "----------- unit test completed ----------"
+            }
+        }
         stage("Jar Publish") {
             steps {
                 script {
@@ -24,9 +32,8 @@ pipeline {
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "jarstaging/(*)",
-                                "target": "libs-release-local/{1}",
-                                "flat": "false",
+                                "pattern": "target/*.jar",
+                                "target": "libs-release-local/",
                                 "props": "${properties}",
                                 "exclusions": [ "*.sha1", "*.md5" ]
                             }
