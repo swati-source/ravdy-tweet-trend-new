@@ -19,7 +19,7 @@ pipeline {
         stage("test") {
             steps {
                 echo "----------- unit test started ----------"
-                sh 'mvn surefire-report:report'
+                sh 'mvn surefire-report:report -Dsurefire-forkCount=1 -Dsurefire.jvmArgs="-Xmx2048m -XX:MaxPermSize=512m"'
                 echo "----------- unit test completed ----------"
             }
         }
@@ -32,11 +32,9 @@ pipeline {
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "jarstaging/(*)",
-                                "target": "libs-release-local/{1}",
-                                "flat": "false",
-                                "props": "${properties}",
-                                "exclusions": [ "*.sha1", "*.md5" ]
+                                "pattern": "target/*.jar",
+                                "target": "libs-release-local/${env.JOB_NAME}/${env.BUILD_NUMBER}/",
+                                "props": "${properties}"
                             }
                         ]
                     }"""
