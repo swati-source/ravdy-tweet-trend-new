@@ -12,14 +12,14 @@ pipeline {
         stage("build") {
             steps {
                 echo "----------- build started ----------"
-                sh 'mvn clean deploy'
+                sh 'mvn clean deploy -Dmaven.test.skip=true'
                 echo "----------- build completed ----------"
             }
         }
         stage("test") {
             steps {
                 echo "----------- unit test started ----------"
-                sh 'mvn test'
+                sh 'mvn surefire-report:report'
                 echo "----------- unit test completed ----------"
             }
         }
@@ -32,8 +32,9 @@ pipeline {
                     def uploadSpec = """{
                         "files": [
                             {
-                                "pattern": "target/*.jar",
-                                "target": "libs-release-local/",
+                                "pattern": "jarstaging/(*)",
+                                "target": "libs-release-local/{1}",
+                                "flat": "false",
                                 "props": "${properties}",
                                 "exclusions": [ "*.sha1", "*.md5" ]
                             }
