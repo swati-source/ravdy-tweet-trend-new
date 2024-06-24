@@ -1,4 +1,3 @@
-def registry = 'https://valaxy05.jfrog.io'
 pipeline {
     agent {
         node {
@@ -6,7 +5,8 @@ pipeline {
         }
     }
     environment {
-        PATH = "/opt/apache-maven-3.9.8/bin:$PATH"
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64/bin/java'
+        PATH = "${JAVA_HOME}/bin:/opt/apache-maven-3.9.8/bin:$PATH"
     }
     stages {
         stage("build") {
